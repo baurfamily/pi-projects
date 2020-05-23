@@ -9,17 +9,13 @@ GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
 
 
-pushed10 = False
 pushed12 = False
 pushed16 = False
 
 while True: # Run forever
-    if GPIO.input(10) == GPIO.HIGH and not pushed10:
-        pushed10 = True
+    if GPIO.input(10) == GPIO.HIGH:
         print("Button 10 was pushed!")
-    elif GPIO.input(10) == GPIO.LOW and pushed10:
-        pushed10 = False
-        print("Button 10 up.")
+        break
         
     if GPIO.input(12) == GPIO.HIGH and not pushed12:
         pushed12 = True
@@ -34,3 +30,4 @@ while True: # Run forever
     elif GPIO.input(16) == GPIO.LOW and pushed16:
         pushed16 = False
         print("Button 14 up.")
+        
