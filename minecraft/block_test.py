@@ -7,7 +7,7 @@ class Wall:
     def __init__(self, x, y, z):
         self.x, self.y, self.z = x, y, z
         self.was_near_block = False
-        self.distance = 2
+        self.distance = 5
             
     def checkDistance(self, source, target, epsilon=0):
         return source >= target - epsilon and source <= target + epsilon
@@ -20,23 +20,25 @@ class Wall:
     
     def hide(self):
         mc.setBlocks(self.x, self.y, self.z, self.x, self.y+1, self.z, block.AIR)
+        
+    def updateState(self, x, z):
+        if self.isNear(x, z):
+            if not self.was_near_block:
+                self.show()
+                self.was_near_block = True
+        else:
+            if self.was_near_block:
+                self.hide()
+                self.was_near_block = False
 
 mc = Minecraft.create()
 
-w = Wall(0, 8, 12)
+walls = []
 
+for i in range(50):
+    walls.append( Wall(-20+i, 8, 12) )
 
 while True:
     ppos = mc.player.getTilePos()
-    if w.isNear(ppos.x, ppos.z):
-        if not w.was_near_block:
-            w.show()
-            print('your on the block')
-            mc.postToChat('your on the block')
-            w.was_near_block = True
-    else:
-        if w.was_near_block:
-            w.hide()
-            print('you moved away')
-            mc.postToChat('you moved away')
-            w.was_near_block = False
+    for w in walls:
+        w.updateState(ppos.x, ppos.z)
